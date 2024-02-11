@@ -1,10 +1,22 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <Menu />
-      <Nav />
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="table-responsive small">
+  <Menu />
+  <div class="container">
+      <div class="page-header" id="banner">
+        <div class="row">
+          <div class="col-lg-11 col-md-7 col-sm-6" style="padding-top:100px">
+            <p class="lead">Booking Overview</p>
+          </div>
+          <div class="col-lg-1 col-md-7 col-sm-6" style="padding-top:100px">
+            <div class="btn-group">
+              <a href="#" class="btn btn-ok btn-success btn-sm" @click="del(booking.id)">Reserve</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bs-docs-section clearfix" style="padding-top:20px">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="table-responsive big">
           <table class="table table-striped table-sm">
             <thead>
               <tr>
@@ -25,17 +37,18 @@
                 <td>{{booking.comments}}</td>
                 <td>
                   <div class="btn-group mr-2">
-                    <a href="#" class="btn btn-sm btn-outline-secondary">Update</a>
-                    <a href="#" class="btn btn-sm btn-outline-secondary" @click="del(booking.id)">Delete</a>
+                    <a href="#" class="btn btn-ok btn-info btn-sm" @click="del(booking.id)"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="btn btn-danger btn-sm" @click="del(booking.id)"><i class="bi bi-trash"></i></a>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-      </main>
-    </div>
-  </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </template>
 
 <script>

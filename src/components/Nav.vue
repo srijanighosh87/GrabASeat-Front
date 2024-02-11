@@ -4,11 +4,6 @@
             aria-labelledby="sidebarMenuLabel">
             <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                 <ul class="nav flex-column">
-                  <li class="nav-item">
-                        <a class="nav-link active" href="/home">
-                            Home
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="/bookings">
                             Bookings

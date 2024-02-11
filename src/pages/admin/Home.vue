@@ -2,7 +2,6 @@
 <div class="container-fluid">
     <div class="row">
       <Menu />
-      <Nav />
       I am home page
     </div>
   </div>

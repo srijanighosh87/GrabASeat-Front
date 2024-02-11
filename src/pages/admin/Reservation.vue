@@ -2,7 +2,6 @@
 <div class="container-fluid">
     <div class="row">
       <Menu />
-      <Nav />
       I am Here
     </div>
   </div>
