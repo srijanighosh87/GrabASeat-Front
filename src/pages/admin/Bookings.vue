@@ -4,18 +4,15 @@
     <div class="page-header" id="banner">
       <div class="row">
         <div class="col-lg-11 col-md-7 col-sm-6" style="padding-top:100px">
-          <p class="lead">Booking Overview</p>
+          <!-- <p class="lead">Booking Overview</p> -->
+          <h3 class="bg-gradient-primary text-white" style="padding-bottom: 1%;">Booking Overview</h3>
         </div>
-        <div class="col-lg-1 col-md-7 col-sm-6" style="padding-top:100px">
-          <div class="btn-group">
-            <a href="#" class="btn btn-ok btn-success btn-sm" @click="del(booking.id)">Reserve</a>
-          </div>
-        </div>
+
       </div>
     </div>
 
     <!-- Three Textboxes After the Reserve Button -->
-    <div class="col-lg-12 col-md-7 col-sm-6">
+    <div class="col-lg-12">
       <div class="row">
         <div class="col-lg-3">
           <div class="form-group custom-form-group row">
@@ -25,7 +22,6 @@
             </div>
           </div>
         </div>
-
         <div class="col-lg-3">
           <div class="form-group custom-form-group row">
             <label for="date" class="col-sm-5">Booking Date</label>
@@ -34,18 +30,20 @@
             </div>
           </div>
         </div>
-
-        <div class="col-lg-3">
+        <div class="col-lg-5">
           <div class="form-group custom-form-group">
             <a href="#" class="btn btn-ok btn-success btn-sm" @click="del(booking.id)"><i class="bi bi-search"></i></a>
           </div>
+        </div>
+        <div class="col-lg-1">
+          <a href="#" class="btn btn-ok btn-success btn-sm" @click="del(booking.id)">Reserve</a>
         </div>
       </div>
     </div>
 
 
 
-    <div class="bs-docs-section clearfix" style="padding-top:20px">
+    <div class="bs-docs-section clearfix" style="padding-top:3%">
       <div class="row">
         <div class="col-lg-12">
           <div class="table-responsive big">
