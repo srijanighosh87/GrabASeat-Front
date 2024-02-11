@@ -1,0 +1,34 @@
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import Bookings from '../pages/admin/Bookings.vue'
+import Reservation from '../pages/admin/Reservation.vue'
+import Home from '../pages/admin/Home.vue'
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/', // Main page
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/home', // Main page
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/bookings',
+    name: 'Booking',
+    component: Bookings
+  },
+  {
+    path: '/reservation',
+    name: 'Reservation',
+    component: Reservation
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
+
+export default router
