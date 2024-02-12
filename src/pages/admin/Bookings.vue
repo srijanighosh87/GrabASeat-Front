@@ -53,8 +53,9 @@
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th scope="col">Booking Reference</th>
+                  <th scope="col">Reference</th>
                   <th scope="col">Customer Name</th>
+                  <th scope="col">Contact</th>
                   <th scope="col">Table Number</th>
                   <th scope="col">Party Size</th>
                   <th scope="col">Booking Datetime</th>
@@ -67,6 +68,7 @@
                 <tr v-for="booking in bookings" :key="booking.id">
                   <td>{{ booking.bookingReference }}</td>
                   <td>{{ booking.customerName }}</td>
+                  <td>{{ booking.customerContact }}</td>
                   <td>{{ booking.tableNumber }}</td>
                   <td>{{ booking.partySize }}</td>
                   <td>{{ new Date(booking.bookingStartDateTime).toLocaleString('en-GB', {
@@ -77,8 +79,7 @@
                   <td>{{ booking.comments }}</td>
                   <td>
                     <div class="btn-group mr-2">
-                      <a href="#" class="btn btn-ok btn-info btn-sm" @click="del(booking.id)"><i
-                          class="bi bi-pencil"></i></a>
+                      <router-link :to="`/updatereservation/${booking.id}/edit`" class="btn btn-ok btn-info btn-sm"><i class="bi bi-pencil"></i></router-link>
                       <a href="#" class="btn btn-danger btn-sm" @click="del(booking.id)"><i class="bi bi-trash"></i></a>
                     </div>
                   </td>
@@ -127,8 +128,8 @@ export default
 
       // show all data
       onMounted(async () => {
-        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -172,8 +173,8 @@ export default
       
       const searchByName = async () => {
         console.log('Search clicked. Name:', name.value);
-        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -214,13 +215,12 @@ export default
           if(date.value !== null && date.value !== '')
           {
             const enteredDateString = date.value.toISOString().split('T')[0]
-            console.log(enteredDateString)
             bookings.value = bookings.value.filter(b => 
             {
-              console.log(b.bookingStartDateTime)
+              //console.log(b.bookingStartDateTime)
               const bookingDate = new Date(b.bookingStartDateTime)
               const bookingDateString = bookingDate.toISOString().split('T')[0]
-              console.log(bookingDateString)
+              //console.log(bookingDateString)
               return bookingDateString === enteredDateString;
             })
           }
