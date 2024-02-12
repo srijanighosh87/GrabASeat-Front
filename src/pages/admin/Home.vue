@@ -37,7 +37,7 @@
 }
 
 .shadow {
-  text-shadow: 10px 2px 10px rgba(17, 17, 17, 0.5);
+  text-shadow: 20px 2px 10px rgba(17, 17, 17, 0.5);
 }
 
 .text-black {

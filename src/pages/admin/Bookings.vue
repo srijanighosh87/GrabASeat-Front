@@ -54,43 +54,46 @@
     <div class="bs-docs-section clearfix" style="padding-top:3%">
       <div class="row">
         <div class="col-lg-12">
-          <div class="table-responsive big">
-            <table class="table table-striped table-sm" >
-              <thead>
-                <tr>
-                  <th scope="col">Reference</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Contact</th>
-                  <th scope="col">Table Number</th>
-                  <th scope="col">Party Size</th>
-                  <th scope="col">Booking Datetime</th>
-                  <th scope="col">Duration (hrs.)</th>
-                  <th scope="col">Comments</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="booking in bookings" :key="booking.id">
-                  <td>{{ booking.bookingReference }}</td>
-                  <td>{{ booking.customerName }}</td>
-                  <td>{{ booking.customerContact }}</td>
-                  <td>{{ booking.tableNumber }}</td>
-                  <td>{{ booking.partySize }}</td>
-                  <td>{{ new Date(booking.bookingStartDateTime).toLocaleString('en-GB', {
-                    day: '2-digit', month:
-                      '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
-                  }) }}</td>
-                  <td>2</td>
-                  <td>{{ booking.comments }}</td>
-                  <td>
-                    <div class="btn-group mr-2">
-                      <router-link :to="`/updatereservation/${booking.id}/edit`" class="btn btn-ok btn-info btn-sm"><i class="bi bi-pencil"></i></router-link>
-                      <a href="#" class="btn btn-danger btn-sm" @click="del(booking.id)"><i class="bi bi-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="table-container">
+            <div class="table-responsive big">
+              <table class="table table-striped table-big">
+                <thead>
+                  <tr>
+                    <th scope="col">Reference</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Table Number</th>
+                    <th scope="col">Party Size</th>
+                    <th scope="col">Booking Datetime</th>
+                    <th scope="col">Duration (hrs.)</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="booking in bookings" :key="booking.id">
+                    <td>{{ booking.bookingReference }}</td>
+                    <td>{{ booking.customerName }}</td>
+                    <td>{{ booking.customerContact }}</td>
+                    <td>{{ booking.tableNumber }}</td>
+                    <td>{{ booking.partySize }}</td>
+                    <td>{{ new Date(booking.bookingStartDateTime).toLocaleString('en-GB', {
+                      day: '2-digit', month:
+                        '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    }) }}</td>
+                    <td>2</td>
+                    <td>{{ booking.comments }}</td>
+                    <td>
+                      <div class="btn-group mr-2">
+                        <router-link :to="`/updatereservation/${booking.id}/edit`" class="btn btn-ok btn-info btn-sm"><i
+                            class="bi bi-pencil"></i></router-link>
+                        <a href="#" class="btn btn-danger btn-sm" @click="del(booking.id)"><i class="bi bi-trash"></i></a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +137,7 @@ export default
       // show all data
       onMounted(async () => {
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+          //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -155,7 +158,7 @@ export default
       const del = async (id) => {
         if (confirm('Are you sure you want to cancel the booking?')) {
           await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${id}`, { method: 'DELETE' })
-          //await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
+            //await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
             .then(async response => {
               const isJson = response.headers.get('content-type').includes('application/json')
               const data = isJson && await response.json()
@@ -175,11 +178,11 @@ export default
             })
         }
       }
-      
+
       const searchByName = async () => {
         console.log('Search clicked. Name:', name.value);
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+          //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -193,18 +196,17 @@ export default
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
-          if(name.value !== '')
-          {
-            bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase())) 
+        if (name.value !== '') {
+          bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase()))
             || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
-          }
+        }
 
       };
 
       const searchByDate = async () => {
         console.log('Search clicked. Date:', date.value);
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+          //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -218,18 +220,16 @@ export default
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
-          if(date.value !== null && date.value !== '')
-          {
-            const enteredDateString = date.value.toISOString().split('T')[0]
-            bookings.value = bookings.value.filter(b => 
-            {
-              //console.log(b.bookingStartDateTime)
-              const bookingDate = new Date(b.bookingStartDateTime)
-              const bookingDateString = bookingDate.toISOString().split('T')[0]
-              //console.log(bookingDateString)
-              return bookingDateString === enteredDateString;
-            })
-          }
+        if (date.value !== null && date.value !== '') {
+          const enteredDateString = date.value.toISOString().split('T')[0]
+          bookings.value = bookings.value.filter(b => {
+            //console.log(b.bookingStartDateTime)
+            const bookingDate = new Date(b.bookingStartDateTime)
+            const bookingDateString = bookingDate.toISOString().split('T')[0]
+            //console.log(bookingDateString)
+            return bookingDateString === enteredDateString;
+          })
+        }
       };
 
       return {
@@ -250,5 +250,10 @@ export default
 .dp__input_icon_pad {
   height: 33px;
   width: 235px
+}
+
+.table-container {
+  max-height: 65vh; /* Adjust the height as needed */
+  overflow-y: auto;
 }
 </style>
