@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="col-lg-1">
-          <a href="#" class="btn btn-ok btn-success btn-sm" @click="del(booking.id)">Reserve</a>
+          <router-link :to="`/reservation`" class="btn btn-ok btn-success btn-sm">Reserve</router-link>
         </div>
       </div>
     </div>
@@ -93,14 +93,13 @@
 </template>
 
 <script>
-/* eslint-disable */
 import Nav from '@/components/Nav'
 import Menu from '@/components/Menu'
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
+import { useRouter } from 'vue-router';
 
 export default
   {
@@ -124,6 +123,7 @@ export default
       const bookings = ref([]) // waiting for bookings to change its value. once changes, loads in HTML
       const name = ref('')
       const date = ref('')
+      const router = useRouter()
 
       // show all data
       onMounted(async () => {
