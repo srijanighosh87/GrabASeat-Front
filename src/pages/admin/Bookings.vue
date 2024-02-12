@@ -7,7 +7,6 @@
           <!-- <p class="lead">Booking Overview</p> -->
           <h3 class="bg-gradient-primary text-white" style="padding-bottom: 1%;">Booking Overview</h3>
         </div>
-
       </div>
     </div>
 
