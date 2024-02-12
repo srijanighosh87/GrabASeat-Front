@@ -80,18 +80,17 @@
 </template>
 
 <script>
-import Nav from '@/components/Nav'
 import Menu from '@/components/Menu'
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'vue/Reservation-Component',
   components:
   {
-    Nav,
     Menu
   },
   data() {
@@ -112,6 +111,7 @@ export default {
     const partysize = ref('')
     const date = ref('')
     const comments = ref('')
+    const router = useRouter()
 
     const createReservation = async () => {
       console.log(`Creating reservation  ${name.value}, ${contact.value}, ${partysize.value}, ${date.value}, ${comments.value}`);
@@ -143,6 +143,7 @@ export default {
               toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
                 timeout: 2000
               });
+              await router.push('/bookings')
             }
           }
           else {
@@ -171,6 +172,9 @@ export default {
       createReservation,
       comments
     }
+  },
+  methods: {
+    
   }
 }
 </script>
