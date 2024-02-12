@@ -127,8 +127,8 @@ export default
 
       // show all data
       onMounted(async () => {
-        //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -148,8 +148,8 @@ export default
       //Delete
       const del = async (id) => {
         if (confirm('Are you sure you want to cancel the booking?')) {
-          //await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${id}`, { method: 'DELETE' })
-          await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
+          await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${id}`, { method: 'DELETE' })
+          //await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
             .then(async response => {
               const isJson = response.headers.get('content-type').includes('application/json')
               const data = isJson && await response.json()
@@ -172,7 +172,8 @@ export default
       
       const searchByName = async () => {
         console.log('Search clicked. Name:', name.value);
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -195,7 +196,8 @@ export default
 
       const searchByDate = async () => {
         console.log('Search clicked. Date:', date.value);
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()

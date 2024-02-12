@@ -115,7 +115,8 @@ export default {
 
     const createReservation = async () => {
       console.log(`Creating reservation  ${name.value}, ${contact.value}, ${partysize.value}, ${date.value}, ${comments.value}`);
-      await fetch('https://localhost:7000/api/Booking', 
+      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking', 
+      //await fetch('https://localhost:7000/api/Booking', 
       { 
         method: 'POST' ,
         headers: {'Content-Type': 'application/json'},
