@@ -86,8 +86,6 @@ import { useToast } from 'vue-toastification';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useRouter } from 'vue-router';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fas, facoffee } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   name: 'vue/Reservation-Component',
