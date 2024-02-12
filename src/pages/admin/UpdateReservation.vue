@@ -12,7 +12,7 @@
       <div class="row mb-4">
         <div class="col-lg-4">
           <div class="form-group custom-form-group row">
-            <label for="name2" class="col-sm-4">Reference</label>
+            <label for="reference" class="col-sm-4">Reference</label>
             <div class="col-sm-8">
               <input type="text" v-model="reference" class="form-control form-control-sm read-only" id="reference" placeholder="Reference no." readonly>
             </div>
@@ -22,7 +22,7 @@
       <div class="row mb-4">
         <div class="col-lg-4">
           <div class="form-group custom-form-group row">
-            <label for="name2" class="col-sm-4">Party Size</label>
+            <label for="partysize" class="col-sm-4">Party Size</label>
             <div class="col-sm-8">
               <input type="text" v-model="partysize" class="form-control form-control-sm" id="partysize"
                 placeholder="How many people?">
@@ -102,7 +102,8 @@ export default {
     const route = useRoute()
 
     onMounted(async () => {
-      await fetch(`https://localhost:7000/api/Booking/${route.params.id}`)
+      await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${route.params.id}`)
+      //await fetch(`https://localhost:7000/api/Booking/${route.params.id}`)
       .then(async response => {
         const isJson = response.headers.get('content-type').includes('application/json')
           if (isJson) {
@@ -140,8 +141,8 @@ export default {
     });
 
     const createReservation = async () => {
-      //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
-      await fetch('https://localhost:7000/api/Booking', 
+      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
+      //await fetch('https://localhost:7000/api/Booking', 
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

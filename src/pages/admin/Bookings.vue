@@ -13,19 +13,22 @@
     <!-- 2 Textboxes After the Reserve Button -->
     <div class="col-lg-12">
       <div class="row">
-        <div class="col-lg-3">
+
+        <div class="col-lg-4">
           <div class="form-group custom-form-group row">
-            <label for="name" class="col-sm-3">Name</label>
-            <div class="col-sm-9">
+            <label for="name" class="col-sm-4">Name/Ref No.</label>
+            <div class="col-sm-8">
               <input type="text" v-model="name" class="form-control form-control-sm" id="name" placeholder="Name">
             </div>
           </div>
         </div>
+
         <div class="col-lg-1">
           <div class="form-group custom-form-group">
             <a href="#" class="btn btn-ok btn-success btn-sm" @click="searchByName()"> <i class="bi bi-search"></i></a>
           </div>
         </div>
+
         <div class="col-lg-3">
           <div class="form-group custom-form-group row">
             <label for="date" class="col-sm-2">Date</label>
@@ -34,11 +37,13 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
+
+        <div class="col-lg-3">
           <div class="form-group custom-form-group">
             <a href="#" class="btn btn-ok btn-success btn-sm" @click="searchByDate()"> <i class="bi bi-search"></i></a>
           </div>
         </div>
+
         <div class="col-lg-1">
           <router-link :to="`/reservation`" class="btn btn-ok btn-success btn-sm">Reserve</router-link>
         </div>
@@ -128,8 +133,8 @@ export default
 
       // show all data
       onMounted(async () => {
-        //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -173,8 +178,8 @@ export default
       
       const searchByName = async () => {
         console.log('Search clicked. Name:', name.value);
-        //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+        //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -190,7 +195,8 @@ export default
           })
           if(name.value !== '')
           {
-            bookings.value = bookings.value.filter(b => b.customerName.toLowerCase().includes(name.value.toLowerCase()))
+            bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase())) 
+            || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
           }
 
       };
