@@ -14,7 +14,7 @@
           <div class="form-group custom-form-group row">
             <label for="reference" class="col-sm-4">Reference</label>
             <div class="col-sm-8">
-              <input type="text" v-model="reference" class="form-control form-control-sm read-only" id="reference" placeholder="Reference no." readonly>
+              <input type="text" v-model="reference" class="form-control form-control-sm text-muted" id="reference" placeholder="Reference no." readonly>
             </div>
           </div>
         </div>

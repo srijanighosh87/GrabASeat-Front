@@ -69,7 +69,7 @@
           <div class="form-group custom-form-group row">
             <label for="name2" class="col-sm-9"></label>
             <div class="col-sm-3">
-              <a href="#" class="btn btn-ok btn-success btn-sm" @click="createReservation()">Reserve</a>
+              <a href="#" class="btn btn-ok btn-success btn-sm" @click="createReservation()">  <FontAwesomeIcon icon="fa-brands fa-twitter" />Reserve</a>
             </div>
           </div>
         </div>
@@ -86,6 +86,8 @@ import { useToast } from 'vue-toastification';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useRouter } from 'vue-router';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fas, facoffee } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   name: 'vue/Reservation-Component',
@@ -140,7 +142,7 @@ export default {
                 toast.error(`Error while creating reservation : ${data.errors}`)
             }
             else {
-              toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
+              toast.success(`Reservation updated successfully!`, {
                 timeout: 2000
               });
               await router.push('/bookings')
