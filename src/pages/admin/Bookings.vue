@@ -210,8 +210,19 @@ export default
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
-          if(name.value !== '')
-            bookings.value = bookings.value.filter(b => b.customerName == name.value)
+          if(date.value !== null && date.value !== '')
+          {
+            const enteredDateString = date.value.toISOString().split('T')[0]
+            console.log(enteredDateString)
+            bookings.value = bookings.value.filter(b => 
+            {
+              console.log(b.bookingStartDateTime)
+              const bookingDate = new Date(b.bookingStartDateTime)
+              const bookingDateString = bookingDate.toISOString().split('T')[0]
+              console.log(bookingDateString)
+              return bookingDateString === enteredDateString;
+            })
+          }
       };
 
       return {
