@@ -149,12 +149,9 @@ export default {
             const isProblemJson = response.headers.get('content-type').includes('application/problem+json')
             const data = isProblemJson && await response.json()
             if (data.errors) {
-              console.log(data.errors)
-              console.log(Object.values(data.errors))
               const errorString = Object.entries(data.errors)
                 .map(([property, messages]) => `${property}: ${messages.join(', ')}`)
                 .join(', ');
-              console.log(errorString)
               toast.error(`Error while creating reservation : ${errorString}`)
             }
           }
