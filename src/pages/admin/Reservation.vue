@@ -14,7 +14,7 @@
           <div class="form-group custom-form-group row">
             <label for="name1" class="col-sm-4">Name</label>
             <div class="col-sm-8">
-              <input type="text" v-model="name" class="form-control form-control-sm" id="name1" placeholder="Name">
+              <input type="text" v-model="name" class="form-control form-control-sm" id="name" placeholder="Name">
             </div>
           </div>
         </div>
@@ -24,7 +24,8 @@
           <div class="form-group custom-form-group row">
             <label for="name2" class="col-sm-4">Contact</label>
             <div class="col-sm-8">
-              <input type="text" v-model="contact" class="form-control form-control-sm" id="contact" placeholder="Mobile no.">
+              <input type="text" v-model="contact" class="form-control form-control-sm" id="contact"
+                placeholder="Mobile no.">
             </div>
           </div>
         </div>
@@ -34,7 +35,8 @@
           <div class="form-group custom-form-group row">
             <label for="name2" class="col-sm-4">Party Size</label>
             <div class="col-sm-8">
-              <input type="text" v-model="partysize" class="form-control form-control-sm" id="partysize" placeholder="How many people?">
+              <input type="text" v-model="partysize" class="form-control form-control-sm" id="partysize"
+                placeholder="How many people?">
             </div>
           </div>
         </div>
@@ -49,7 +51,17 @@
           </div>
         </div>
       </div>
-      
+      <div class="row mb-4">
+        <div class="col-lg-4">
+          <div class="form-group custom-form-group row">
+            <label for="name2" class="col-sm-4">Comments</label>
+            <div class="col-sm-8">
+              <input type="text" v-model="comments" class="form-control form-control-sm" id="comments"
+                placeholder="Anything we should know about?">
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- save booking button -->
       <div class="row mb-4">
@@ -57,12 +69,12 @@
           <div class="form-group custom-form-group row">
             <label for="name2" class="col-sm-9"></label>
             <div class="col-sm-3">
-              <a href="#" class="btn btn-ok btn-success btn-sm" @click="reserve()">Reserve</a>
+              <a href="#" class="btn btn-ok btn-success btn-sm" @click="createReservation()">Reserve</a>
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -70,6 +82,10 @@
 <script>
 import Nav from '@/components/Nav'
 import Menu from '@/components/Menu'
+import { ref, onMounted } from 'vue'
+import { useToast } from 'vue-toastification';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
   name: 'vue/Reservation-Component',
@@ -77,6 +93,64 @@ export default {
   {
     Nav,
     Menu
+  },
+  data() {
+    return {
+      date: null,
+      name: '',
+      contact: '',
+      partysize: '',
+      comments: ''
+    }
+  },
+  setup() {
+    // Get toast interface
+    const toast = useToast()
+
+    const name = ref('')
+    const contact = ref('')
+    const partysize = ref('')
+    const date = ref('')
+    const comments = ref('')
+
+    const createReservation = async () => {
+      console.log(`Creating reservation  ${name.value}, ${contact.value}, ${partysize.value}, ${date.value}, ${comments.value}`);
+      await fetch('https://localhost:7000/api/Booking', 
+      { 
+        method: 'POST' ,
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          CustomerName: name.value,
+          CustomerContact: contact.value,
+          partysize: partysize.value,
+          BookingDateTime: date.value,
+          comments: comments.value
+        })
+      })
+        .then(async response => {
+          const isJson = response.headers.get('content-type').includes('application/json')
+          const data = isJson && await response.json()
+          if (!response.ok) {
+            toast.error(`Error while creating reservation : ${data.message}`);
+          }
+          else {
+            toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
+                  timeout: 2000
+                });          }
+        })
+        .catch(error => {
+          toast.error(`Error while creating reservation : ${error}`);
+        })
+    };
+
+    return {
+      name,
+      contact,
+      partysize,
+      date,
+      createReservation,
+      comments
+    }
   }
 }
 </script>
