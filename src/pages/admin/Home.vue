@@ -9,12 +9,12 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 p-0">
               <!-- Food Image with text overlay -->
-              <div class="position-relative">
+              <div class="position-fixed">
                 <img src="../../resources/homepage-image2.jpg" alt="Food Image" class="img-fluid" style="max-width: 100%;">
 
                 <!-- Text overlay -->
                 <div class="text-overlay">
-                  <h1 class="bg-gradient-primary text-white d-inline-block p-3 shadow">Welcome to Grab-A-Sat</h1>
+                  <h1 class="bg-gradient-primary text-white d-inline-block p-3 shadow">Grab A Seat</h1>
                 </div>
               </div>
             </div>
