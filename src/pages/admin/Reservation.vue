@@ -115,32 +115,54 @@ export default {
 
     const createReservation = async () => {
       console.log(`Creating reservation  ${name.value}, ${contact.value}, ${partysize.value}, ${date.value}, ${comments.value}`);
-      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking', 
-      //await fetch('https://localhost:7000/api/Booking', 
-      { 
-        method: 'POST' ,
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          CustomerName: name.value,
-          CustomerContact: contact.value,
-          partysize: partysize.value,
-          BookingDateTime: date.value,
-          comments: comments.value
+      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
+        //await fetch('https://localhost:7000/api/Booking', 
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            CustomerName: name.value,
+            CustomerContact: contact.value,
+            partysize: partysize.value,
+            BookingDateTime: date.value,
+            comments: comments.value
+          })
         })
-      })
         .then(async response => {
           const isJson = response.headers.get('content-type').includes('application/json')
-          const data = isJson && await response.json()
-          if (!response.ok) {
-            toast.error(`Error while creating reservation : ${data.message}`);
+          if (isJson) {
+            const data = isJson && await response.json()
+            if (!response.ok) {
+
+              if (data.message !== undefined)
+                toast.error(`Error while creating reservation : ${data.message}`)
+              else
+                toast.error(`Error while creating reservation : ${data.errors}`)
+            }
+            else {
+              toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
+                timeout: 2000
+              });
+            }
           }
           else {
-            toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
-                  timeout: 2000
-                });          }
+            const isProblemJson = response.headers.get('content-type').includes('application/problem+json')
+            const data = isProblemJson && await response.json()
+            if (data.errors) {
+              console.log(data.errors)
+              console.log(Object.values(data.errors))
+              const errorString = Object.entries(data.errors)
+                .map(([property, messages]) => `${property}: ${messages.join(', ')}`)
+                .join(', ');
+              console.log(errorString)
+              toast.error(`Error while creating reservation : ${errorString}`)
+            }
+          }
+
+
         })
         .catch(error => {
-          toast.error(`Error while creating reservation : ${error}`);
+          toast.error(`Error while creating reservation11 : ${error}`);
         })
     };
 
