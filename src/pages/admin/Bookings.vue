@@ -55,7 +55,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="table-responsive big">
-            <table class="table table-striped table-sm">
+            <table class="table table-striped table-sm" >
               <thead>
                 <tr>
                   <th scope="col">Reference</th>

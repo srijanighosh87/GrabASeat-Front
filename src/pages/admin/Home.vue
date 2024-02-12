@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid no-scroll">
+  <div class="container-fluid">
     <div class="row">
       <!-- Assuming Menu is a component -->
       <Menu />
@@ -26,27 +26,6 @@
 </template>
 
 <style scoped>
-.no-scroll {
-  height: 100vh;
-  overflow: hidden;
-}
-
-.text-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  text-align: center;
-}
-
-.shadow {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-</style>
-
-
-<style scoped>
 .text-overlay {
   position: absolute;
   top: 10%;
@@ -60,6 +39,9 @@
   text-shadow: 10px 2px 10px rgba(17, 17, 17, 0.5);
 }
 
+.text-black {
+  color: black;
+}
 </style>
 
 
