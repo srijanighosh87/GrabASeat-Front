@@ -14,7 +14,7 @@
 
                 <!-- Text overlay -->
                 <div class="text-overlay">
-                  <h1 class="bg-gradient-primary text-white d-inline-block p-3 shadow">Grab A Seat</h1>
+                  <h1 class="bg-gradient-primary text-white d-inline-block p-3 shadow" style="font-size: 5em;">Grab A Seat <i class="bi bi-egg-fried"></i></h1>
                 </div>
               </div>
             </div>
@@ -25,10 +25,11 @@
   </div>
 </template>
 
+
 <style scoped>
 .text-overlay {
   position: absolute;
-  top: 10%;
+  top: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
