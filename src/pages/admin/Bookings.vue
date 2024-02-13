@@ -98,7 +98,7 @@
           <div class="container">
             <ul class="pagination">
               <li class="page-item">
-                <a class="page-link" href="#" @click="previousPage">Previous</a>
+                <a class="page-link" href="#" @click="goToPage(currentPage - 1)" :class="{ 'disabled-link': currentPage === 1 }">Previous</a>
               </li>
 
 
@@ -108,7 +108,7 @@
 
 
               <li class="page-item">
-                <a class="page-link" href="#" @click="nextPage">Next</a>
+                <a class="page-link" href="#" @click="goToPage(currentPage + 1)" :class="{ 'disabled-link': currentPage === totalpages }">Next</a>
               </li>
             </ul>
           </div>
@@ -141,23 +141,22 @@ export default
         date: null,
         name: '',
         endIndex: 100,
-        startIndex: 0,
-        totalpages: 0
       }
     },
     setup() {
       // Get toast interface
       const toast = useToast();
+      const router = useRouter()
 
       const bookings = ref([]) // waiting for bookings to change its value. once changes, loads in HTML
       const name = ref('')
       const date = ref('')
-      const currentPage = ref(1)
+      let currentPage = ref(1)
       const itemsPerPage = ref(10)
       let startIndex = ref(0)
       const totalpages = ref(0)
+      let isPreviousButtonDisabled = ref(false)
 
-      const router = useRouter()
 
       // show all data
       onMounted(async () => {
@@ -187,6 +186,7 @@ export default
               console.log('StartIndex -> ' + startIndex)
               totalpages.value = Math.floor(bookings.value.length / itemsPerPage.value) + 1
               console.log('Total pages -> ' + totalpages.value)
+              isPreviousButtonDisabled.value = true
             }
           })
           .catch(error => {
@@ -272,9 +272,12 @@ export default
         }
       }
 
-      const goToPage = async (currentPage) => {
+      const goToPage = async (currentPageNumber) => {
         console.log("Pagination")
-        console.log("Currentpage ->" + currentPage)
+        currentPage.value = currentPageNumber
+        console.log("Currentpage ->" + currentPage.value)
+        if(currentPage.value === 1) isPreviousButtonDisabled.value = true
+        
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
@@ -286,7 +289,7 @@ export default
               bookings.value = data.result
 
               //pagination logic
-              let startIndex = (currentPage - 1) * itemsPerPage.value
+              let startIndex = (currentPage.value - 1) * itemsPerPage.value
               let endIndex = startIndex + itemsPerPage.value
               console.log(startIndex + ' - ' + endIndex)
 
@@ -295,8 +298,9 @@ export default
 
 
               bookings.value = data.result.slice(startIndex, endIndex);
-              console.log(bookings.value)
-              //startIndex = endIndex + 1;
+              startIndex = endIndex + 1;
+
+              console.log("Currentpage ->" + currentPage.value)
             }
           })
           .catch(error => {
@@ -339,5 +343,10 @@ export default
   max-height: 60vh;
   /* Adjust the height as needed */
   overflow-y: auto;
+}
+
+.disabled-link {
+  pointer-events: none; /* Disable pointer events */
+  color: #6c757d; /* Adjust color for disabled state */
 }
 </style>
