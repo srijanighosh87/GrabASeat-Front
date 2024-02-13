@@ -13,6 +13,9 @@
             <li class="nav-item">
               <a class="nav-link" href="./reservation">Reserve A Table</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./bookings-grid">Booking-Grid</a>
+            </li>
           </ul>
         </div>
       </div>

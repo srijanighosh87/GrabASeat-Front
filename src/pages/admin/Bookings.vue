@@ -56,7 +56,7 @@
         <div class="col-lg-12">
           <div class="table-container">
             <div class="table-responsive big">
-              <table class="table table-striped table-big">
+              <table class="table table-striped table-sm">
                 <thead>
                   <tr>
                     <th scope="col">Reference</th>
@@ -95,6 +95,23 @@
               </table>
             </div>
           </div>
+          <div class="container">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#" @click="previousPage">Previous</a>
+              </li>
+
+
+              <li v-for="pageNumber in totalpages" :key="index" class="page-item">
+                <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
+              </li>
+
+
+              <li class="page-item">
+                <a class="page-link" href="#" @click="nextPage">Next</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -122,7 +139,10 @@ export default
     data() {
       return {
         date: null,
-        name: ''
+        name: '',
+        endIndex: 100,
+        startIndex: 0,
+        totalpages: 0
       }
     },
     setup() {
@@ -132,6 +152,11 @@ export default
       const bookings = ref([]) // waiting for bookings to change its value. once changes, loads in HTML
       const name = ref('')
       const date = ref('')
+      const currentPage = ref(1)
+      const itemsPerPage = ref(10)
+      let startIndex = ref(0)
+      const totalpages = ref(0)
+
       const router = useRouter()
 
       // show all data
@@ -145,8 +170,23 @@ export default
               toast.error(`Error while fetching all booking data : ${data.message}`);
             }
             else {
-              console.log('Bookings:', bookings.value);
               bookings.value = data.result
+              console.log("Loading Bookings page..." + bookings.value.length)
+
+              //pagination logic
+              startIndex = (currentPage.value - 1) * itemsPerPage.value
+              let endIndex = startIndex + itemsPerPage.value
+              console.log(startIndex + ' - ' + endIndex)
+
+              // Make sure endIndex doesn't exceed the length of the bookings array
+              endIndex = Math.min(endIndex, bookings.value.length)
+
+
+              bookings.value = data.result.slice(startIndex, endIndex);
+              startIndex = endIndex + 1;
+              console.log('StartIndex -> ' + startIndex)
+              totalpages.value = Math.floor(bookings.value.length / itemsPerPage.value) + 1
+              console.log('Total pages -> ' + totalpages.value)
             }
           })
           .catch(error => {
@@ -201,7 +241,7 @@ export default
             || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
         }
 
-      };
+      }
 
       const searchByDate = async () => {
         console.log('Search clicked. Date:', date.value);
@@ -230,7 +270,47 @@ export default
             return bookingDateString === enteredDateString;
           })
         }
-      };
+      }
+
+      const goToPage = async (currentPage) => {
+        console.log("Pagination")
+        console.log("Currentpage ->" + currentPage)
+        await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
+          .then(async response => {
+            const isJson = response.headers.get('content-type').includes('application/json')
+            const data = isJson && await response.json()
+            if (!response.ok) {
+              toast.error(`Error while fetching booking data : ${data.message}`);
+            }
+            else {
+              bookings.value = data.result
+
+              //pagination logic
+              let startIndex = (currentPage - 1) * itemsPerPage.value
+              let endIndex = startIndex + itemsPerPage.value
+              console.log(startIndex + ' - ' + endIndex)
+
+              // Make sure endIndex doesn't exceed the length of the bookings array
+              endIndex = Math.min(endIndex, bookings.value.length)
+
+
+              bookings.value = data.result.slice(startIndex, endIndex);
+              console.log(bookings.value)
+              //startIndex = endIndex + 1;
+            }
+          })
+          .catch(error => {
+            toast.error(`Failed to fetch booking data : ${error}`);
+          })
+        if (date.value !== null && date.value !== '') {
+          const enteredDateString = date.value.toISOString().split('T')[0]
+          bookings.value = bookings.value.filter(b => {
+            const bookingDate = new Date(b.bookingStartDateTime)
+            const bookingDateString = bookingDate.toISOString().split('T')[0]
+            return bookingDateString === enteredDateString;
+          })
+        }
+      }
 
       return {
         bookings,
@@ -238,7 +318,10 @@ export default
         searchByName,
         name,
         date,
-        searchByDate
+        searchByDate,
+        goToPage,
+        currentPage,
+        totalpages
       }
     }
   }
@@ -253,7 +336,8 @@ export default
 }
 
 .table-container {
-  max-height: 65vh; /* Adjust the height as needed */
+  max-height: 60vh;
+  /* Adjust the height as needed */
   overflow-y: auto;
 }
 </style>

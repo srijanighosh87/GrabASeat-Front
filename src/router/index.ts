@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Bookings from '../pages/admin/Bookings.vue'
+import BookingsGrid from '../pages/admin/Bookings-Grid.vue'
 import Reservation from '../pages/admin/Reservation.vue'
 import Home from '../pages/admin/Home.vue'
 import UpdateReservation from '../pages/admin/UpdateReservation.vue'

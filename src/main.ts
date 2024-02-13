@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, Plugin } from 'vue'
 import App from './App.vue'
 import router from './router'
 import Toast, { POSITION } from 'vue-toastification'
@@ -8,7 +8,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-createApp(App)
+
+
+const app = createApp(App)
 .use(router)
 .use(Toast, {position: POSITION.BOTTOM_RIGHT})
 .component('VueDatePicker', VueDatePicker)
