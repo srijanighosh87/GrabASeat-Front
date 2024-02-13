@@ -1,6 +1,6 @@
 <template>
   <Menu />
-  <div class="container">
+  <div class="container" >
     <div class="page-header" id="banner">
       <div class="row">
         <div class="col-lg-11 col-md-7 col-sm-6" style="padding-top:100px">
@@ -113,7 +113,7 @@
 
                 <li v-for="pageNumber in pagesToShow" :key="pageNumber" class="page-item">
                   <a class="page-link" href="#" @click="goToPage(pageNumber)"
-                    :class="{ 'disabled-link': pageNumber === '...' }">{{ pageNumber }}</a>
+                    :class="{ 'disabled-link': pageNumber === '...', 'selected-page': currentPage === pageNumber}">{{ pageNumber }}</a>
                 </li>
 
                 <li class="page-item">
@@ -388,6 +388,14 @@ export default
 .disabled-link {
   pointer-events: none;
   color: #6c757d;
+}
+
+.page-link.selected-page {
+  background-color: #cce5ff;
+  color: #007bff;
+  font-size: 1.2em; /* Adjust the font size as needed */
+  padding: 4px 12px; /* Add padding for a larger area */
+  border-radius: 8px; /* Optional: Add border-radius for rounded corners */
 }
 
 .page-link {
