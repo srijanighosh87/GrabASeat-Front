@@ -95,23 +95,29 @@
               </table>
             </div>
           </div>
-          <div class="container">
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#" @click="goToPage(currentPage - 1)" :class="{ 'disabled-link': currentPage === 1 }">Previous</a>
-              </li>
+
+          <div class="container col-lg-12">
+            <div class="container col-lg-3">
+              <ul class="pagination">
+                <li class="page-item">
+                  <a class="page-link" href="#" @click="goToPage(currentPage - 1)"
+                    :class="{ 'disabled-link': currentPage === 1 }">Previous</a>
+                </li>
 
 
-              <li v-for="pageNumber in totalpages" :key="index" class="page-item">
-                <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
-              </li>
+                <li v-for="pageNumber in totalpages" :key="index" class="page-item">
+                  <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
+                </li>
 
 
-              <li class="page-item">
-                <a class="page-link" href="#" @click="goToPage(currentPage + 1)" :class="{ 'disabled-link': currentPage === totalpages }">Next</a>
-              </li>
-            </ul>
+                <li class="page-item">
+                  <a class="page-link" href="#" @click="goToPage(currentPage + 1)"
+                    :class="{ 'disabled-link': currentPage === totalpages }">Next</a>
+                </li>
+              </ul>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -155,11 +161,11 @@ export default
       const itemsPerPage = ref(10)
       let startIndex = ref(0)
       const totalpages = ref(0)
-      let isPreviousButtonDisabled = ref(false)
 
 
       // show all data
       onMounted(async () => {
+        debugger
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
           //await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
@@ -186,7 +192,6 @@ export default
               console.log('StartIndex -> ' + startIndex)
               totalpages.value = Math.floor(bookings.value.length / itemsPerPage.value) + 1
               console.log('Total pages -> ' + totalpages.value)
-              isPreviousButtonDisabled.value = true
             }
           })
           .catch(error => {
@@ -276,8 +281,7 @@ export default
         console.log("Pagination")
         currentPage.value = currentPageNumber
         console.log("Currentpage ->" + currentPage.value)
-        if(currentPage.value === 1) isPreviousButtonDisabled.value = true
-        
+
         await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
@@ -346,7 +350,8 @@ export default
 }
 
 .disabled-link {
-  pointer-events: none; /* Disable pointer events */
-  color: #6c757d; /* Adjust color for disabled state */
-}
-</style>
+  pointer-events: none;
+  /* Disable pointer events */
+  color: #6c757d;
+  /* Adjust color for disabled state */
+}</style>
