@@ -83,15 +83,17 @@
 import Menu from '@/components/Menu'
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification';
-import VueDatePicker from '@vuepic/vue-datepicker';
+import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import BASE_URL from '@/config'
 
 export default {
   name: 'vue/Reservation-Component',
   components:
   {
-    Menu
+    Menu,
+    BASE_URL
   },
   data() {
     return {
@@ -99,7 +101,7 @@ export default {
       name: '',
       contact: '',
       partysize: '',
-      comments: ''
+      comments: '',
     }
   },
   setup() {
@@ -115,8 +117,8 @@ export default {
 
     const createReservation = async () => {
       console.log(`Creating reservation  ${name.value}, ${contact.value}, ${partysize.value}, ${date.value}, ${comments.value}`);
-      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
-        //await fetch('https://localhost:7000/api/Booking', 
+      const apiUrl = BASE_URL + 'Booking';
+      await fetch(apiUrl, 
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

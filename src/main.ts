@@ -9,7 +9,6 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 
-
 const app = createApp(App)
 .use(router)
 .use(Toast, {position: POSITION.BOTTOM_RIGHT})

@@ -72,15 +72,17 @@
 import Menu from '@/components/Menu'
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification';
-import VueDatePicker from '@vuepic/vue-datepicker';
+import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
+import BASE_URL from '@/config'
 
 export default {
   name: 'vue/UpdateReservation-Component',
   components:
   {
-    Menu
+    Menu,
+    BASE_URL
   },
   data() {
     return {
@@ -88,7 +90,7 @@ export default {
       name: '',
       contact: '',
       partysize: '',
-      comments: ''
+      comments: '',
     }
   },
   setup() {
@@ -102,8 +104,8 @@ export default {
     const route = useRoute()
 
     onMounted(async () => {
-      //await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${route.params.id}`)
-      await fetch(`https://localhost:7000/api/Booking/${route.params.id}`)
+      const apiUrl = BASE_URL + `Booking/${route.params.id}`;
+      await fetch(apiUrl)
       .then(async response => {
         const isJson = response.headers.get('content-type').includes('application/json')
           if (isJson) {
@@ -142,7 +144,8 @@ export default {
 
     const createReservation = async () => {
       //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
-      await fetch('https://localhost:7000/api/Booking', 
+       const apiUrl = BASE_URL + 'Booking';
+      await fetch(apiUrl, 
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
