@@ -102,8 +102,8 @@ export default {
     const route = useRoute()
 
     onMounted(async () => {
-      await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${route.params.id}`)
-      //await fetch(`https://localhost:7000/api/Booking/${route.params.id}`)
+      //await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${route.params.id}`)
+      await fetch(`https://localhost:7000/api/Booking/${route.params.id}`)
       .then(async response => {
         const isJson = response.headers.get('content-type').includes('application/json')
           if (isJson) {
@@ -141,8 +141,8 @@ export default {
     });
 
     const createReservation = async () => {
-      await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
-      //await fetch('https://localhost:7000/api/Booking', 
+      //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
+      await fetch('https://localhost:7000/api/Booking', 
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
