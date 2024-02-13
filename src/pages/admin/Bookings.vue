@@ -179,9 +179,13 @@ export default
 
       // show all data
       onMounted(async () => {
+        const apiUrl = process.env.NODE_ENV === 'production'
+          ? 'https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings'
+          :  'https://localhost:7000/api/Booking/GetAllBookings';
+
         debugger
         //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch(apiUrl)
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
