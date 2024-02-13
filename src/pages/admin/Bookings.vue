@@ -96,24 +96,34 @@
             </div>
           </div>
 
-
+          <!-- pagination -->
 
           <div class="container col-lg-12">
             <div class="container col-lg-3">
               <ul class="pagination">
+                <li class="page-item">
+                  <a class="page-link" href="#" @click="goToPage(1)" :class="{ 'disabled-link': currentPage === 1 }">
+                    << </a>
+                </li>
+
                 <li class="page-item">
                   <a class="page-link" href="#" @click="goToPage(currentPage - 1)"
                     :class="{ 'disabled-link': currentPage === 1 }"> Prev </a>
                 </li>
 
                 <li v-for="pageNumber in pagesToShow" :key="pageNumber" class="page-item">
-                  <a class="page-link" href="#" @click="goToPage(pageNumber)" 
+                  <a class="page-link" href="#" @click="goToPage(pageNumber)"
                     :class="{ 'disabled-link': pageNumber === '...' }">{{ pageNumber }}</a>
                 </li>
 
                 <li class="page-item">
                   <a class="page-link" href="#" @click="goToPage(currentPage + 1)"
                     :class="{ 'disabled-link': currentPage === totalpages }"> Next </a>
+                </li>
+
+                <li class="page-item">
+                  <a class="page-link" href="#" @click="goToPage(totalpages)"
+                    :class="{ 'disabled-link': currentPage === totalpages }"> >> </a>
                 </li>
               </ul>
             </div>
@@ -171,7 +181,7 @@ export default
       onMounted(async () => {
         debugger
         //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-          await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -207,7 +217,7 @@ export default
       const del = async (id) => {
         if (confirm('Are you sure you want to cancel the booking?')) {
           //await fetch(`https://grabaseatbookingservice.azurewebsites.net/api/Booking/${id}`, { method: 'DELETE' })
-            await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
+          await fetch(`https://localhost:7000/api/Booking/${id}`, { method: 'DELETE' })
             .then(async response => {
               const isJson = response.headers.get('content-type').includes('application/json')
               const data = isJson && await response.json()
@@ -231,7 +241,7 @@ export default
       const searchByName = async () => {
         console.log('Search clicked. Name:', name.value);
         //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-          await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -255,7 +265,7 @@ export default
       const searchByDate = async () => {
         console.log('Search clicked. Date:', date.value);
         //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking/GetAllBookings')
-          await fetch('https://localhost:7000/api/Booking/GetAllBookings')
+        await fetch('https://localhost:7000/api/Booking/GetAllBookings')
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
@@ -338,28 +348,26 @@ export default
       }
     },
     computed: {
-    pagesToShow() {
-      console.log("totalpages during computation")
-      console.log(this.totalpages)
-      if (this.totalpages < 5) {
-        console.log("Showing all pages")
-        return Array.from({ length: this.totalpages }, (_, index) => index + 1);
-      } else {
-        // If current page is 4 or more and there are more than 5 pages, show the first 2 and last 2 pages
-        const specialPages = [1, 2, this.totalpages - 1, this.totalpages];
-        const ExtendedSpecialPages = [1, 2, 3, this.totalpages - 2, this.totalpages - 1, this.totalpages];
+      pagesToShow() {
+        console.log(this.totalpages)
+        if (this.totalpages < 5) {
+          return Array.from({ length: this.totalpages }, (_, index) => index + 1);
+        } else {
+          // If current page is 4 or more and there are more than 5 pages, show the first 2 and last 2 pages
+          const specialPages = [1, 2, this.totalpages - 1, this.totalpages];
+          const ExtendedSpecialPages = [1, 2, 3, this.totalpages - 2, this.totalpages - 1, this.totalpages];
 
-        if(specialPages.includes(this.currentPage))
-          return [1, 2, '...', this.totalpages - 1, this.totalpages];
-        if(ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == 3)
-          return [1, 2, 3, '...', this.totalpages - 1, this.totalpages];
-        if(ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == this.totalpages - 2)
-          return [1, 2, '...', this.totalpages - 2, this.totalpages - 1, this.totalpages];
-        else
-          return [1, 2, '...',  this.currentPage ,'...', this.totalpages - 1, this.totalpages];
-      }
+          if (specialPages.includes(this.currentPage))
+            return [1, 2, '...', this.totalpages - 1, this.totalpages];
+          if (ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == 3)
+            return [1, 2, 3, '...', this.totalpages - 1, this.totalpages];
+          if (ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == this.totalpages - 2)
+            return [1, 2, '...', this.totalpages - 2, this.totalpages - 1, this.totalpages];
+          else
+            return [1, 2, '...', this.currentPage, '...', this.totalpages - 1, this.totalpages];
+        }
+      },
     },
-  },
   }
 
 </script>
@@ -383,15 +391,21 @@ export default
 }
 
 .page-link {
-  background-color: #007bff; /* Bootstrap primary color */
-  color: #fff; /* White text */
-  border-color: #007bff; /* Border color */
+  background-color: #007bff;
+  /* Bootstrap primary color */
+  color: #fff;
+  /* White text */
+  border-color: #007bff;
+  /* Border color */
 }
 
 .page-link:hover,
 .page-link:focus {
-  background-color: #0056b3; /* Darken the color on hover or focus */
-  color: #fff; /* White text */
-  border-color: #0056b3; /* Darken the border color on hover or focus */
+  background-color: #0056b3;
+  /* Darken the color on hover or focus */
+  color: #fff;
+  /* White text */
+  border-color: #0056b3;
+  /* Darken the border color on hover or focus */
 }
 </style>
