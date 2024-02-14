@@ -10,7 +10,6 @@
       </div>
     </div>
 
-    <!-- 2 Textboxes After the Reserve Button -->
     <div class="col-lg-12">
       <div class="row">
 

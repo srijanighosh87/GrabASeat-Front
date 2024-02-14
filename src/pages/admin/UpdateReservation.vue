@@ -14,7 +14,8 @@
           <div class="form-group custom-form-group row">
             <label for="reference" class="col-sm-4">Reference</label>
             <div class="col-sm-8">
-              <input type="text" v-model="reference" class="form-control form-control-sm text-muted" id="reference" placeholder="Reference no." readonly>
+              <input type="text" v-model="reference" class="form-control form-control-sm text-muted" id="reference"
+                placeholder="Reference no." readonly>
             </div>
           </div>
         </div>
@@ -56,9 +57,13 @@
       <div class="row mb-4">
         <div class="col-lg-4">
           <div class="form-group custom-form-group row">
-            <label for="name2" class="col-sm-9"></label>
-            <div class="col-sm-3">
+            <label for="name2" class="col-sm-8"></label>
+            <div class="col-sm-2">
               <a href="#" class="btn btn-ok btn-success btn-sm" @click="createReservation()">Reserve</a>
+            </div>
+            <div class="col-sm-2">
+              <!-- <a href="#" class="btn btn-ok btn-danger btn-sm" @click="createReservation()"><FontAwesomeIcon icon="fa-brands fa-twitter" />Cancel</a> -->
+              <router-link :to="`/bookings`" class="btn btn-ok btn-danger btn-sm">Cancel</router-link>
             </div>
           </div>
         </div>
@@ -106,8 +111,8 @@ export default {
     onMounted(async () => {
       const apiUrl = BASE_URL + `Booking/${route.params.id}`;
       await fetch(apiUrl)
-      .then(async response => {
-        const isJson = response.headers.get('content-type').includes('application/json')
+        .then(async response => {
+          const isJson = response.headers.get('content-type').includes('application/json')
           if (isJson) {
             const data = isJson && await response.json()
             if (!response.ok) {
@@ -136,16 +141,15 @@ export default {
               toast.error(`Error while creating reservation : ${errorString}`)
             }
           }
-      })
-      .catch(error => {
-        toast.error(`Error while accessing reservation : ${error}`);
-      })
+        })
+        .catch(error => {
+          toast.error(`Error while accessing reservation : ${error}`);
+        })
     });
 
     const createReservation = async () => {
-      //await fetch('https://grabaseatbookingservice.azurewebsites.net/api/Booking',
-       const apiUrl = BASE_URL + 'Booking';
-      await fetch(apiUrl, 
+      const apiUrl = BASE_URL + 'Booking';
+      await fetch(apiUrl,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
