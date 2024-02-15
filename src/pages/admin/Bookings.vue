@@ -172,6 +172,7 @@ export default
       const router = useRouter()
 
       const bookings = ref([]) // waiting for bookings to change its value. once changes, loads in HTML
+      const searchresult = ref([])
       const name = ref('')
       const date = ref('')
       let currentPage = ref(1)
@@ -180,7 +181,7 @@ export default
       const totalpages = ref(0)
       const fetchPastBookings = ref(false)
       let pagesToShow = ref([])
-
+      let filterData = ref('')
 
 
       // show all data
@@ -215,62 +216,77 @@ export default
 
       //search
       const search = async () => {
-        console.log('Search clicked. Date:', date.value);
-        const apiUrl = BASE_URL + `Booking/GetAllBookings?fetchpastbookings=true`;
-        await fetch(apiUrl)
-          .then(async response => {
-            const isJson = response.headers.get('content-type').includes('application/json')
-            const data = isJson && await response.json()
-            if (!response.ok) {
-              toast.error(`Error while fetching booking data : ${data.message}`);
-            }
-            else {
-              bookings.value = data.result
-            }
-          })
-          .catch(error => {
-            toast.error(`Failed to fetch booking data : ${error}`);
-          })
-        if (date.value !== null && date.value !== '') {
-          const enteredDateString = date.value.toISOString().split('T')[0]
-          bookings.value = bookings.value.filter(b => {
-            const bookingDate = new Date(b.bookingStartDateTime)
-            const bookingDateString = bookingDate.toISOString().split('T')[0]
-            return bookingDateString === enteredDateString;
-          })
+        debugger
+        if (date.value !== '' || name.value !== '') {
+          let apiUrl = BASE_URL + `Booking/SearchBookings`
+          let filterVal = ''
+          if (date.value !== '') filterVal += `?nameOrRef=${name.value}&date=${date.value.toISOString().split('T')[0]}`;
+          else filterVal += `?nameOrRef=${name.value}`;
+          console.log(filterVal)
+          filterData.value = filterVal
+          await fetch(apiUrl + filterVal)
+            .then(async response => {
+              const isJson = response.headers.get('content-type').includes('application/json')
+              const data = isJson && await response.json()
+              if (!response.ok) {
+                toast.error(`Error while fetching booking data : ${data.message}`);
+              }
+              else {
+                bookings.value = data.result.allDtos
+                searchresult.value = data.result.allDtos
+                totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
+                if (data.result.count % itemsPerPage.value !== 0) {
+                  totalpages.value += 1;
+                }
+                calculatePagesToShow(pagesToShow)
+              }
+            })
+            .catch(error => {
+              toast.error(`Failed to fetch booking data : ${error}`);
+            })
         }
-        if (name.value !== '') {
-          bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase()))
-            || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
-        }
-
       }
 
       //pagination - go to a specific page
       const goToPage = async (currentPageNumber) => {
         console.log("clicked page: " + currentPageNumber)
-        const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=false&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${currentPageNumber}`;
-        await fetch(apiUrl)
-          .then(async response => {
-            debugger
-            currentPage.value = currentPageNumber
-            const isJson = response.headers.get('content-type').includes('application/json')
-            const data = isJson && await response.json()
-            if (!response.ok) {
-              toast.error(`Error while fetching all booking data : ${data.message}`);
-            }
-            else {
-              bookings.value = data.result.allDtos
-              totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
-              if (data.result.count % itemsPerPage.value !== 0) {
-                totalpages.value += 1;
+        debugger
+        if (filterData === '') {
+          const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=false&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${currentPageNumber}`;
+          await fetch(apiUrl)
+            .then(async response => {
+              debugger
+              currentPage.value = currentPageNumber
+              const isJson = response.headers.get('content-type').includes('application/json')
+              const data = isJson && await response.json()
+              if (!response.ok) {
+                toast.error(`Error while fetching all booking data : ${data.message}`);
               }
-              calculatePagesToShow(pagesToShow)
-            }
-          })
-          .catch(error => {
-            toast.error(`Failed to fetch booking data : ${error}`);
-          })
+              else {
+                bookings.value = data.result.allDtos
+                totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
+                if (data.result.count % itemsPerPage.value !== 0) {
+                  totalpages.value += 1;
+                }
+                calculatePagesToShow(pagesToShow)
+              }
+            })
+            .catch(error => {
+              toast.error(`Failed to fetch booking data : ${error}`);
+            })
+        }
+        else {
+          console.log("DO NOT ACCESS API. get currrent data")
+          currentPage.value = currentPageNumber
+          startIndex.value = (currentPageNumber - 1) * itemsPerPage.value;
+          let endIndex = startIndex.value + itemsPerPage.value;
+          endIndex = Math.min(endIndex, searchresult.value.length);
+          console.log(searchresult.value)
+          console.log(searchresult.value.slice(startIndex.value, endIndex))
+          bookings.value = searchresult.value.slice(startIndex.value, endIndex);
+          calculatePagesToShow(pagesToShow)
+        }
+
       }
 
       // search for all bookings
@@ -291,7 +307,6 @@ export default
                 totalpages.value += 1;
               }
               calculatePagesToShow(pagesToShow)
-              console.log(pagesToShow.value)
             }
           })
           .catch(error => {
