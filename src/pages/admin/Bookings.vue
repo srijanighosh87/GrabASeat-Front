@@ -208,7 +208,9 @@ export default
                 toast.success(`Reservation ${removedBooking.bookingReference} Cancelled`, {
                   timeout: 2000
                 });
-                bookings.value = bookings.value.filter(b => b.id != id)
+
+                //call API again
+                await searchBookings(1);
               }
             })
             .catch(error => {
