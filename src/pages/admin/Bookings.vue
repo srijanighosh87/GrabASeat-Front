@@ -116,7 +116,7 @@
 
                 <li v-for="pageNumber in pagesToShow" :key="pageNumber" class="page-item">
                   <a class="page-link" href="#" @click="goToPage(pageNumber)"
-                    :class="{ 'disabled-link': pageNumber === '...', 'selected-page': currentPage === pageNumber }">{{
+                    :class="{ 'disabled-link': pageNumber === '...', 'selected-page': currentPage === pageNumber && typeof pageNumber === 'number' }">{{
                       pageNumber }}</a>
                 </li>
 
@@ -179,6 +179,8 @@ export default
       let startIndex = ref(0)
       const totalpages = ref(0)
       const fetchPastBookings = ref(false)
+      let pagesToShow = ref([])
+
 
 
       // show all data
@@ -241,12 +243,8 @@ export default
           bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase()))
             || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
         }
-      }
 
-      //check status change of checkbox fetch-past-bookings
-      watch(fetchPastBookings, async (newValue) => {
-        await searchBookings(1);
-      });
+      }
 
       //pagination - go to a specific page
       const goToPage = async (currentPageNumber) => {
@@ -263,9 +261,11 @@ export default
             }
             else {
               bookings.value = data.result.allDtos
-              console.log("Loading Bookings count" + data.result.count)
-              totalpages.value = Math.floor(data.result.count / itemsPerPage.value) + 1
-              console.log('Total pages -> ' + totalpages.value)
+              totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
+              if (data.result.count % itemsPerPage.value !== 0) {
+                totalpages.value += 1;
+              }
+              calculatePagesToShow(pagesToShow)
             }
           })
           .catch(error => {
@@ -286,14 +286,49 @@ export default
             }
             else {
               bookings.value = data.result.allDtos
-              console.log("Loading Bookings count" + data.result.count)
-              totalpages.value = Math.floor(data.result.count / itemsPerPage.value) + 1
-              console.log('Total pages -> ' + totalpages.value)
+              totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
+              if (data.result.count % itemsPerPage.value !== 0) {
+                totalpages.value += 1;
+              }
+              calculatePagesToShow(pagesToShow)
+              console.log(pagesToShow.value)
             }
           })
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
+      }
+
+      const calculatePagesToShow = (pagesToShow) => {
+        debugger
+        console.log("totalpages : " + totalpages.value)
+        console.log("currentPage : " + currentPage.value)
+        if (totalpages.value < 5) {
+          pagesToShow.value = Array.from({ length: totalpages.value }, (_, index) => index + 1)
+          return
+        }
+        else {
+          // If current page is 4 or more and there are more than 5 pages, show the first 2 and last 2 pages
+          const specialPages = [1, 2, totalpages.value - 1, totalpages.value];
+          const ExtendedSpecialPages = [1, 2, 3, totalpages.value - 2, totalpages.value - 1, totalpages.value];
+
+          if (specialPages.includes(currentPage.value)) {
+            pagesToShow.value = [1, 2, '...', totalpages.value - 1, totalpages.value];
+            return
+          }
+          if (ExtendedSpecialPages.includes(currentPage.value) && currentPage.value == 3) {
+            pagesToShow.value = [1, 2, 3, '...', totalpages.value - 1, totalpages.value];
+            return
+          }
+          if (ExtendedSpecialPages.includes(currentPage.value) && currentPage.value == totalpages.value - 2) {
+            pagesToShow.value = [1, 2, '...', totalpages.value - 2, totalpages.value - 1, totalpages.value];
+            return
+          }
+          else {
+            pagesToShow.value = [1, 2, '...', currentPage.value, '...', totalpages.value - 1, totalpages.value];
+            return
+          }
+        }
       }
 
       return {
@@ -305,29 +340,10 @@ export default
         goToPage,
         currentPage,
         totalpages,
-        fetchPastBookings
+        fetchPastBookings,
+        pagesToShow
       }
-    },
-    computed: {
-      pagesToShow() {
-        if (this.totalpages < 5) {
-          return Array.from({ length: this.totalpages }, (_, index) => index + 1);
-        } else {
-          // If current page is 4 or more and there are more than 5 pages, show the first 2 and last 2 pages
-          const specialPages = [1, 2, this.totalpages - 1, this.totalpages];
-          const ExtendedSpecialPages = [1, 2, 3, this.totalpages - 2, this.totalpages - 1, this.totalpages];
-
-          if (specialPages.includes(this.currentPage))
-            return [1, 2, '...', this.totalpages - 1, this.totalpages];
-          if (ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == 3)
-            return [1, 2, 3, '...', this.totalpages - 1, this.totalpages];
-          if (ExtendedSpecialPages.includes(this.currentPage) && this.currentPage == this.totalpages - 2)
-            return [1, 2, '...', this.totalpages - 2, this.totalpages - 1, this.totalpages];
-          else
-            return [1, 2, '...', this.currentPage, '...', this.totalpages - 1, this.totalpages];
-        }
-      },
-    },
+    }
   }
 
 </script>
