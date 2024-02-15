@@ -45,7 +45,15 @@
     </div>
 
 
+
     <div class="bs-docs-section clearfix" style="padding-top:3%">
+      <div class="container col-lg-12">
+        <div class="row">
+          <div class="col-lg-3">
+            <p>Total Records: {{ totalRecords}}</p>
+          </div>
+        </div>
+      </div>
       <!-- <div class="row">
         <div class="col-auto">
           <div class="form-check">
@@ -179,6 +187,7 @@ export default
       const itemsPerPage = ref(10)
       let startIndex = ref(0)
       const totalpages = ref(0)
+      const totalRecords = ref(0)
       const fetchPastBookings = ref(false)
       let pagesToShow = ref([])
       let filterData = ref('')
@@ -233,12 +242,22 @@ export default
                 toast.error(`Error while fetching booking data : ${data.message}`);
               }
               else {
-                bookings.value = data.result.allDtos
+                //bookings.value = data.result.allDtos
                 searchresult.value = data.result.allDtos
+
+                startIndex.value = 0;
+                let endIndex = 10;
+                console.log(searchresult.value)
+                console.log(searchresult.value.slice(startIndex.value, endIndex))
+                bookings.value = searchresult.value.slice(startIndex.value, endIndex);
+
+                totalRecords.value = data.result.count
+                
                 totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
                 if (data.result.count % itemsPerPage.value !== 0) {
                   totalpages.value += 1;
                 }
+
                 calculatePagesToShow(pagesToShow)
               }
             })
@@ -304,6 +323,7 @@ export default
             }
             else {
               bookings.value = data.result.allDtos
+              totalRecords.value =  data.result.count
               totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
               if (data.result.count % itemsPerPage.value !== 0) {
                 totalpages.value += 1;
@@ -358,7 +378,8 @@ export default
         currentPage,
         totalpages,
         fetchPastBookings,
-        pagesToShow
+        pagesToShow,
+        totalRecords
       }
     }
   }
