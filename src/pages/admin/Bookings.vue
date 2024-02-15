@@ -48,21 +48,15 @@
 
     <div class="bs-docs-section clearfix" style="padding-top:3%">
       <div class="container col-lg-12">
-        <div class="row">
-          <div class="col-lg-3">
-            <p>Total Records: {{ totalRecords}}</p>
+        <div class="row justify-content-end">
+          <div class="col-lg-11">
+          </div>
+          <div class="col-lg-1">
+            <span style="font-weight: bold;">Count:</span>
+            <a href ="#" class="btn btn-warning rounded-circle p-0" style="width: 30px; height: 30px; line-height: 1.5; margin-bottom: 10%; margin-left: 5%;"> {{ totalRecords }}</a>
           </div>
         </div>
       </div>
-      <!-- <div class="row">
-        <div class="col-auto">
-          <div class="form-check">
-            <input type="checkbox" v-model="fetchPastBookings" id="fetchPastBookings" name="fetchPastBookings"
-              class="form-check-input">
-            <label for="myCheckbox" class="form-check-label ms-2">Show past bookings</label>
-          </div>
-        </div>
-      </div> -->
       <div class="row">
         <div class="col-lg-12">
           <div class="table-container">
