@@ -218,6 +218,7 @@ export default
       const search = async () => {
         debugger
         if (date.value !== '' || name.value !== '') {
+          currentPage.value = 1
           let apiUrl = BASE_URL + `Booking/SearchBookings`
           let filterVal = ''
           if (date.value !== '') filterVal += `?nameOrRef=${name.value}&date=${date.value.toISOString().split('T')[0]}`;
@@ -250,8 +251,9 @@ export default
       //pagination - go to a specific page
       const goToPage = async (currentPageNumber) => {
         console.log("clicked page: " + currentPageNumber)
+        console.log(filterData.value)
         debugger
-        if (filterData === '') {
+        if (filterData.value === '' || filterData.value === undefined) {
           const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=false&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${currentPageNumber}`;
           await fetch(apiUrl)
             .then(async response => {
