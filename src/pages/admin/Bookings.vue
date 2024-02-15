@@ -1,10 +1,10 @@
 <template>
   <Menu />
-  <div class="container" >
+  <div class="container">
     <div class="page-header" id="banner">
       <div class="row">
         <div class="col-lg-11 col-md-7 col-sm-6" style="padding-top:100px">
-          <!-- <p class="lead">Booking Overview</p> -->
+
           <h3 class="bg-gradient-primary text-white" style="padding-bottom: 1%;">Booking Overview</h3>
         </div>
       </div>
@@ -22,12 +22,6 @@
           </div>
         </div>
 
-        <div class="col-lg-1">
-          <div class="form-group custom-form-group">
-            <a href="#" class="btn btn-ok btn-success btn-sm" @click="searchByName()"> <i class="bi bi-search"></i></a>
-          </div>
-        </div>
-
         <div class="col-lg-3">
           <div class="form-group custom-form-group row">
             <label for="date" class="col-sm-2">Date</label>
@@ -37,20 +31,30 @@
           </div>
         </div>
 
-        <div class="col-lg-3">
+        <div class="col-lg-4">
           <div class="form-group custom-form-group">
-            <a href="#" class="btn btn-ok btn-success btn-sm" @click="searchByDate()"> <i class="bi bi-search"></i></a>
+            <a href="#" class="btn btn-ok btn-success btn-sm" @click="search()"> <i class="bi bi-search"></i></a>
           </div>
         </div>
-
         <div class="col-lg-1">
           <router-link :to="`/reservation`" class="btn btn-ok btn-success btn-sm">Reserve</router-link>
         </div>
       </div>
+
+
     </div>
 
 
     <div class="bs-docs-section clearfix" style="padding-top:3%">
+      <!-- <div class="row">
+        <div class="col-auto">
+          <div class="form-check">
+            <input type="checkbox" v-model="fetchPastBookings" id="fetchPastBookings" name="fetchPastBookings"
+              class="form-check-input">
+            <label for="myCheckbox" class="form-check-label ms-2">Show past bookings</label>
+          </div>
+        </div>
+      </div> -->
       <div class="row">
         <div class="col-lg-12">
           <div class="table-container">
@@ -112,7 +116,8 @@
 
                 <li v-for="pageNumber in pagesToShow" :key="pageNumber" class="page-item">
                   <a class="page-link" href="#" @click="goToPage(pageNumber)"
-                    :class="{ 'disabled-link': pageNumber === '...', 'selected-page': currentPage === pageNumber}">{{ pageNumber }}</a>
+                    :class="{ 'disabled-link': pageNumber === '...', 'selected-page': currentPage === pageNumber }">{{
+                      pageNumber }}</a>
                 </li>
 
                 <li class="page-item">
@@ -127,10 +132,6 @@
               </ul>
             </div>
           </div>
-
-
-
-
         </div>
       </div>
     </div>
@@ -140,7 +141,7 @@
 <script>
 import Nav from '@/components/Nav'
 import Menu from '@/components/Menu'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useToast } from 'vue-toastification';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -162,6 +163,7 @@ export default
         date: null,
         name: '',
         endIndex: 100,
+        fetchPastBookings: false
       }
     },
     setup() {
@@ -176,42 +178,12 @@ export default
       const itemsPerPage = ref(10)
       let startIndex = ref(0)
       const totalpages = ref(0)
+      const fetchPastBookings = ref(false)
 
 
       // show all data
       onMounted(async () => {
-        console.log(BASE_URL)
-        const apiUrl = BASE_URL + 'Booking/GetAllBookings';
-        await fetch(apiUrl)
-          .then(async response => {
-            const isJson = response.headers.get('content-type').includes('application/json')
-            const data = isJson && await response.json()
-            if (!response.ok) {
-              toast.error(`Error while fetching all booking data : ${data.message}`);
-            }
-            else {
-              bookings.value = data.result
-              console.log("Loading Bookings page..." + bookings.value.length)
-              totalpages.value = Math.floor(bookings.value.length / itemsPerPage.value) + 1
-              console.log('Total pages -> ' + totalpages.value)
-
-              //pagination logic
-              startIndex = (currentPage.value - 1) * itemsPerPage.value
-              let endIndex = startIndex + itemsPerPage.value
-              console.log(startIndex + ' - ' + endIndex)
-
-              // Make sure endIndex doesn't exceed the length of the bookings array
-              endIndex = Math.min(endIndex, bookings.value.length)
-
-
-              bookings.value = data.result.slice(startIndex, endIndex);
-              startIndex = endIndex + 1;
-              console.log('StartIndex -> ' + startIndex)
-            }
-          })
-          .catch(error => {
-            toast.error(`Failed to fetch booking data : ${error}`);
-          })
+        await searchBookings(1);
       })
 
       //Delete
@@ -239,9 +211,10 @@ export default
         }
       }
 
-      const searchByName = async () => {
-        console.log('Search clicked. Name:', name.value);
-        const apiUrl = BASE_URL + 'Booking/GetAllBookings';
+      //search
+      const search = async () => {
+        console.log('Search clicked. Date:', date.value);
+        const apiUrl = BASE_URL + `Booking/GetAllBookings?fetchpastbookings=true`;
         await fetch(apiUrl)
           .then(async response => {
             const isJson = response.headers.get('content-type').includes('application/json')
@@ -256,100 +229,87 @@ export default
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
+        if (date.value !== null && date.value !== '') {
+          const enteredDateString = date.value.toISOString().split('T')[0]
+          bookings.value = bookings.value.filter(b => {
+            const bookingDate = new Date(b.bookingStartDateTime)
+            const bookingDateString = bookingDate.toISOString().split('T')[0]
+            return bookingDateString === enteredDateString;
+          })
+        }
         if (name.value !== '') {
           bookings.value = bookings.value.filter(b => (b.customerName.toLowerCase().includes(name.value.toLowerCase()))
             || (b.bookingReference.toLowerCase() === name.value.toLowerCase()))
         }
-
       }
 
-      const searchByDate = async () => {
-        console.log('Search clicked. Date:', date.value);
-        const apiUrl = BASE_URL + 'Booking/GetAllBookings';
-        await fetch(apiUrl)
-          .then(async response => {
-            const isJson = response.headers.get('content-type').includes('application/json')
-            const data = isJson && await response.json()
-            if (!response.ok) {
-              toast.error(`Error while fetching booking data : ${data.message}`);
-            }
-            else {
-              bookings.value = data.result
-            }
-          })
-          .catch(error => {
-            toast.error(`Failed to fetch booking data : ${error}`);
-          })
-        if (date.value !== null && date.value !== '') {
-          const enteredDateString = date.value.toISOString().split('T')[0]
-          bookings.value = bookings.value.filter(b => {
-            //console.log(b.bookingStartDateTime)
-            const bookingDate = new Date(b.bookingStartDateTime)
-            const bookingDateString = bookingDate.toISOString().split('T')[0]
-            //console.log(bookingDateString)
-            return bookingDateString === enteredDateString;
-          })
-        }
-      }
+      //check status change of checkbox fetch-past-bookings
+      watch(fetchPastBookings, async (newValue) => {
+        await searchBookings(1);
+      });
 
+      //pagination - go to a specific page
       const goToPage = async (currentPageNumber) => {
-        console.log("Pagination")
-        currentPage.value = currentPageNumber
-        console.log("Currentpage ->" + currentPage.value)
-        const apiUrl = BASE_URL + 'Booking/GetAllBookings';
+        console.log("clicked page: " + currentPageNumber)
+        const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=false&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${currentPageNumber}`;
         await fetch(apiUrl)
           .then(async response => {
+            debugger
+            currentPage.value = currentPageNumber
             const isJson = response.headers.get('content-type').includes('application/json')
             const data = isJson && await response.json()
             if (!response.ok) {
-              toast.error(`Error while fetching booking data : ${data.message}`);
+              toast.error(`Error while fetching all booking data : ${data.message}`);
             }
             else {
-              bookings.value = data.result
-
-              //pagination logic
-              let startIndex = (currentPage.value - 1) * itemsPerPage.value
-              let endIndex = startIndex + itemsPerPage.value
-              console.log(startIndex + ' - ' + endIndex)
-
-              // Make sure endIndex doesn't exceed the length of the bookings array
-              endIndex = Math.min(endIndex, bookings.value.length)
-
-
-              bookings.value = data.result.slice(startIndex, endIndex);
-              startIndex = endIndex + 1;
-
-              console.log("Currentpage ->" + currentPage.value)
+              bookings.value = data.result.allDtos
+              console.log("Loading Bookings count" + data.result.count)
+              totalpages.value = Math.floor(data.result.count / itemsPerPage.value) + 1
+              console.log('Total pages -> ' + totalpages.value)
             }
           })
           .catch(error => {
             toast.error(`Failed to fetch booking data : ${error}`);
           })
-        if (date.value !== null && date.value !== '') {
-          const enteredDateString = date.value.toISOString().split('T')[0]
-          bookings.value = bookings.value.filter(b => {
-            const bookingDate = new Date(b.bookingStartDateTime)
-            const bookingDateString = bookingDate.toISOString().split('T')[0]
-            return bookingDateString === enteredDateString;
+      }
+
+      // search for all bookings
+      const searchBookings = async (pageNumber) => {
+        const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=${fetchPastBookings.value}&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${pageNumber}`;
+        await fetch(apiUrl)
+          .then(async response => {
+            debugger
+            const isJson = response.headers.get('content-type').includes('application/json')
+            const data = isJson && await response.json()
+            if (!response.ok) {
+              toast.error(`Error while fetching all booking data : ${data.message}`);
+            }
+            else {
+              bookings.value = data.result.allDtos
+              console.log("Loading Bookings count" + data.result.count)
+              totalpages.value = Math.floor(data.result.count / itemsPerPage.value) + 1
+              console.log('Total pages -> ' + totalpages.value)
+            }
           })
-        }
+          .catch(error => {
+            toast.error(`Failed to fetch booking data : ${error}`);
+          })
       }
 
       return {
         bookings,
         del,
-        searchByName,
         name,
         date,
-        searchByDate,
+        search,
         goToPage,
         currentPage,
-        totalpages
+        totalpages,
+        fetchPastBookings
       }
     },
     computed: {
       pagesToShow() {
-        console.log(this.totalpages)
         if (this.totalpages < 5) {
           return Array.from({ length: this.totalpages }, (_, index) => index + 1);
         } else {
@@ -393,9 +353,12 @@ export default
 .page-link.selected-page {
   background-color: #cce5ff;
   color: #007bff;
-  font-size: 1.2em; /* Adjust the font size as needed */
-  padding: 4px 12px; /* Add padding for a larger area */
-  border-radius: 8px; /* Optional: Add border-radius for rounded corners */
+  font-size: 1.2em;
+  /* Adjust the font size as needed */
+  padding: 4px 12px;
+  /* Add padding for a larger area */
+  border-radius: 8px;
+  /* Optional: Add border-radius for rounded corners */
 }
 
 .page-link {
