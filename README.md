@@ -28,9 +28,9 @@ Currently, in the Database, we have the following tables:
 12. If a slot is available while updating an existing booking, the user will be informed and the old booking will not be updated.
 13. If while updating, the user changes the capacity of the booking, there is a possibility to change the table number (based on availability).
 14. The user can delete a booking using the booking ID.
-15. Gateway Swagger URL: https://localhost:7777/swagger/index.html
-16. BookingAPI Swagger URL: https://localhost:7001/swagger/index.html
-17. BookingAPI is accepting requests only from port 7777.
+15. BookingAPI Swagger URL (local): https://localhost:7000/swagger/index.html. Azure URL: grabaseatbookingservice.azurewebsites.net
+16. Front URL: https://black-sand-09021e30f.4.azurestaticapps.net
+17. For this project, a shared database has been used and all APIs are written in one single project. But later for customer-related information, a separate customer database can be used.
 
 **## Improvements / to do**
 1. Authentication is not added for the user.
@@ -38,18 +38,15 @@ Currently, in the Database, we have the following tables:
 3. Adding multiple tables together for a larger group is not supported.
 4. There is no scope to update/delete existing users.
 5. There is no scope to add/update/delete existing tables.
-6. Concurrency issue is not handled.
-7. Currently, all the tables mentioned above are in one single Database.
-8. Booking confirmation could be sent to the user later by email. This can be implemented by using Azure Service Bus / Hangfire.
-9. Currently there is around 70% test coverage of the code is implemented. This can be improved.
-10. For this project, a shared database has been used and all APIs are written in one single project. The reason behind this was, that the InMemory Database was used instead of a real database. The DBContext for the InMemory database for projects creates a separate instance and hence was unusable in this project. In a real database was used, this project could be implemented with a separate approach with Database-per-Service pattern (separate services for Customer, Table, and Booking) for Data management.
-11. Health check for APIs, and circuit breakers can be implemented for Reliability.
+6. Currently, all the tables mentioned above are in one single Database.
+7. Booking confirmation could be sent to the user later by email. This can be implemented by using SendGrid (Working on it)
+8. Unit test cases not implemented yet (will be implemented using NUnit later)
+10. Health check for APIs, and circuit breakers can be implemented for Reliability.
+11. Gateway not implemented yet.
 
 
 **Techstack**-
 1. **Database**: Entity Framework core InMemory database (Data is seeded in Program.cs).
 2. **ORM**: EF Core
-3. **Design Pattern**: Repository pattern, Microservices with Gateway in Ocelot.
-4. **Unit test Framework** : NUnit.
 5. **Documentation of APIs:** Swagger Open API
 
