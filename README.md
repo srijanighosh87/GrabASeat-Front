@@ -30,7 +30,9 @@ Currently, in the Database, we have the following tables:
 14. The user can delete a booking using the booking ID.
 15. BookingAPI Swagger URL (local): https://localhost:7000/swagger/index.html. Azure URL: grabaseatbookingservice.azurewebsites.net
 16. Front URL: https://black-sand-09021e30f.4.azurestaticapps.net
-17. For this project, a shared database has been used and all APIs are written in one single project. But later for customer-related information, a separate customer database can be used.
+17. For the frontend, CD for Git workflow with Azure has been implemented.
+18. For the Backend code, manual deployment is needed as of now (CD will be implemented later).
+19. For this project, a shared database has been used and all APIs are written in one single project. But later for customer-related information, a separate customer database can be used.
 
 **## Improvements / to do**
 1. Authentication is not added for the user.
