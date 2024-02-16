@@ -41,7 +41,13 @@
         </div>
       </div>
 
-
+      <div class="row">
+        <div v-if="filterData" class="mt-2">
+        <span class="badge bg-info" style="padding: 4px 8px; font-size: 12px; line-height: 1.5;">{{ filterData }}
+          <button class="btn btn-link btn-sm" @click="clearFilter">x</button>
+        </span>
+      </div>
+      </div>
     </div>
 
 
@@ -53,7 +59,9 @@
           </div>
           <div class="col-lg-1">
             <span style="font-weight: bold;">Count:</span>
-            <a href ="#" class="btn btn-warning rounded-circle p-0" style="width: 30px; height: 30px; line-height: 1.5; margin-bottom: 10%; margin-left: 5%;"> {{ totalRecords }}</a>
+            <a href="#" class="btn btn-warning rounded-circle p-0"
+              style="width: 30px; height: 30px; line-height: 1.5; margin-bottom: 10%; margin-left: 5%;"> {{ totalRecords
+              }}</a>
           </div>
         </div>
       </div>
@@ -226,10 +234,14 @@ export default
           currentPage.value = 1
           let apiUrl = BASE_URL + `Booking/SearchBookings`
           let filterVal = ''
-          if (date.value !== '') filterVal += `?nameOrRef=${name.value}&date=${date.value.toISOString().split('T')[0]}`;
+          if (name.value !== '') {
+            filterData.value = `Name/Ref = ${name.value}`
+          }
+          if (date.value !== null && date.value !== '') {
+            filterVal += `?nameOrRef=${name.value}&date=${date.value.toISOString().split('T')[0]}`;
+            filterData.value = filterData.value + ` , Date= ${date.value.toISOString().split('T')[0]}`
+          }
           else filterVal += `?nameOrRef=${name.value}`;
-          console.log(filterVal)
-          filterData.value = filterVal
           await fetch(apiUrl + filterVal)
             .then(async response => {
               const isJson = response.headers.get('content-type').includes('application/json')
@@ -238,7 +250,6 @@ export default
                 toast.error(`Error while fetching booking data : ${data.message}`);
               }
               else {
-                //bookings.value = data.result.allDtos
                 searchresult.value = data.result.allDtos
 
                 startIndex.value = 0;
@@ -248,12 +259,12 @@ export default
                 bookings.value = searchresult.value.slice(startIndex.value, endIndex);
 
                 totalRecords.value = data.result.count
-                
+
                 totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
                 if (data.result.count % itemsPerPage.value !== 0) {
                   totalpages.value += 1;
                 }
-
+                console.log(filterData.value)
                 calculatePagesToShow(pagesToShow)
               }
             })
@@ -293,7 +304,6 @@ export default
             })
         }
         else {
-          console.log("DO NOT ACCESS API. get currrent data")
           currentPage.value = currentPageNumber
           startIndex.value = (currentPageNumber - 1) * itemsPerPage.value;
           let endIndex = startIndex.value + itemsPerPage.value;
@@ -308,7 +318,7 @@ export default
 
       // search for all bookings
       const searchBookings = async (pageNumber) => {
-        const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=${fetchPastBookings.value}&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${pageNumber}`;
+        const apiUrl = BASE_URL + `Booking/GetPaginatedbookings?fetchPastBookings=false&numberOfItemsPerPage=${itemsPerPage.value}&pageNumber=${pageNumber}`;
         await fetch(apiUrl)
           .then(async response => {
             debugger
@@ -319,7 +329,7 @@ export default
             }
             else {
               bookings.value = data.result.allDtos
-              totalRecords.value =  data.result.count
+              totalRecords.value = data.result.count
               totalpages.value = Math.floor(data.result.count / itemsPerPage.value);
               if (data.result.count % itemsPerPage.value !== 0) {
                 totalpages.value += 1;
@@ -364,6 +374,13 @@ export default
         }
       }
 
+      // Function to clear the filter
+      const clearFilter = () => {
+        debugger
+        filterData.value = '';
+        searchBookings(1)
+      };
+
       return {
         bookings,
         del,
@@ -375,7 +392,9 @@ export default
         totalpages,
         fetchPastBookings,
         pagesToShow,
-        totalRecords
+        totalRecords,
+        filterData,
+        clearFilter
       }
     }
   }
