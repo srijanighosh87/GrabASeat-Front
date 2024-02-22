@@ -117,9 +117,9 @@ export default {
             const data = isJson && await response.json()
             if (!response.ok) {
               if (data.message !== undefined)
-                toast.error(`Error while creating reservation : ${data.message}`)
+                toast.error(`Error while updating reservation : ${data.message}`)
               else
-                toast.error(`Error while creating reservation : ${data.errors}`)
+                toast.error(`Error while updating reservation : ${data.errors}`)
             }
             else {
               toast.success(`Reservation details retrieved successfully for Booking Reference ${data.result.bookingReference}`, {
@@ -138,7 +138,7 @@ export default {
               const errorString = Object.entries(data.errors)
                 .map(([property, messages]) => `${property}: ${messages.join(', ')}`)
                 .join(', ');
-              toast.error(`Error while creating reservation : ${errorString}`)
+              toast.error(`Error while updating reservation : ${errorString}`)
             }
           }
         })
@@ -167,12 +167,12 @@ export default {
             if (!response.ok) {
 
               if (data.message !== undefined)
-                toast.error(`Error while creating reservation : ${data.message}`)
+                toast.error(`Error while updating reservation : ${data.message}`)
               else
-                toast.error(`Error while creating reservation : ${data.errors}`)
+                toast.error(`Error while updating reservation : ${data.errors}`)
             }
             else {
-              toast.success(`Reservation Created with Booking Reference ${data.result.bookingReference}`, {
+              toast.success(`Reservation updated with Booking Reference ${data.result.bookingReference}`, {
                 timeout: 2000
               });
               await router.push('/bookings')
@@ -185,14 +185,14 @@ export default {
               const errorString = Object.entries(data.errors)
                 .map(([property, messages]) => `${property}: ${messages.join(', ')}`)
                 .join(', ');
-              toast.error(`Error while creating reservation : ${errorString}`)
+              toast.error(`Error while updating reservation : ${errorString}`)
             }
           }
 
 
         })
         .catch(error => {
-          toast.error(`Error while creating reservation : ${error}`);
+          toast.error(`Error while updating reservation : ${error}`);
         })
     };
 

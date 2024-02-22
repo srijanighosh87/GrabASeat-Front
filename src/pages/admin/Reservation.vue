@@ -42,6 +42,17 @@
         </div>
       </div>
       <div class="row mb-4">
+        <div class="col-lg-4">
+          <div class="form-group custom-form-group row">
+            <label for="name2" class="col-sm-4">Email</label>
+            <div class="col-sm-8">
+              <input type="text" v-model="email" class="form-control form-control-sm" id="email"
+                placeholder="Email">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
         <div class="col-lg-5">
           <div class="form-group custom-form-group row">
             <label for="name2" class="col-sm-4">Booking Date</label>
@@ -131,7 +142,8 @@ export default {
             CustomerContact: contact.value,
             partysize: partysize.value,
             BookingDateTime: date.value,
-            comments: comments.value
+            comments: comments.value,
+            email: email.value
           })
         })
         .then(async response => {
@@ -146,7 +158,7 @@ export default {
                 toast.error(`Error while creating reservation : ${data.errors}`)
             }
             else {
-              toast.success(`Reservation updated successfully!`, {
+              toast.success(`Reservation created successfully!`, {
                 timeout: 2000
               });
               await router.push('/bookings')
@@ -166,7 +178,7 @@ export default {
 
         })
         .catch(error => {
-          toast.error(`Error while creating reservation11 : ${error}`);
+          toast.error(`Error while creating reservation : ${error}`);
         })
     };
 

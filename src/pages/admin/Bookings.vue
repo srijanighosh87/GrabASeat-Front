@@ -75,6 +75,7 @@
                     <th scope="col">Reference</th>
                     <th scope="col">Customer Name</th>
                     <th scope="col">Contact</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Table Number</th>
                     <th scope="col">Party Size</th>
                     <th scope="col">Booking Datetime</th>
@@ -88,6 +89,7 @@
                     <td>{{ booking.bookingReference }}</td>
                     <td>{{ booking.customerName }}</td>
                     <td>{{ booking.customerContact }}</td>
+                    <td>{{ booking.customerEmail }}</td>
                     <td>{{ booking.tableNumber }}</td>
                     <td>{{ booking.partySize }}</td>
                     <td>{{ new Date(booking.bookingStartDateTime).toLocaleString('en-GB', {
