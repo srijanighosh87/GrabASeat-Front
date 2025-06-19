@@ -28,8 +28,8 @@ Currently, in the Database, we have the following tables:
 12. If a slot is available while updating an existing booking, the user will be informed and the old booking will not be updated.
 13. If while updating, the user changes the capacity of the booking, there is a possibility to change the table number (based on availability).
 14. The user can delete a booking using the booking ID.
-15. BookingAPI Swagger URL (local): https://localhost:7000/swagger/index.html. Azure URL: grabaseatbookingservice.azurewebsites.net
-16. Front URL: https://black-sand-09021e30f.4.azurestaticapps.net
+15. BookingAPI Swagger URL (local): https://localhost:7000/swagger/index.html. Azure URL: grabaseatbookingservice.azurewebsites.net (Not maintaining at the moment)
+16. Front URL: https://black-sand-09021e30f.4.azurestaticapps.net (Not maintaining at the moment)
 17. For the frontend, CD for Git workflow with Azure has been implemented.
 18. For the Backend code, manual deployment is needed as of now (CD will be implemented later).
 19. For this project, a shared database has been used and all APIs are written in one single project. But later for customer-related information, a separate customer database can be used.
